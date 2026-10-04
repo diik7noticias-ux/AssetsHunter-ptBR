@@ -39,7 +39,7 @@ def keyword_check(url,path,match_pattern,cms_name):
 
 def Whatcms(url):
     fr = open('Dictionaries/TideFinger.json','r', encoding='UTF-8')
-    data= json.load(fr, encoding='utf-8')
+    data= json.load(fr)
     fr.close()
     print('Fingerprints carregados: {} itens'.format(len(data)))
     print('Power By Tidefinger：http://finger.tidesec.com')

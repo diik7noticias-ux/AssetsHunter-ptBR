@@ -14,12 +14,14 @@
 
 import dns.resolver
 from Core.decorators import Print_info
+from Core.compat import dns_query, fix_dns
+fix_dns()
 
 
 def Domain_ip(domain):
     res=[]
     domain=domain.replace('https://','').replace('https//','').replace('/','')
-    A = dns.resolver.query(domain, 'A')
+    A = dns_query(domain, 'A')
     for i in A.response.answer:
         for j in i.items:
             if j.rdtype == 1:
@@ -32,7 +34,7 @@ def Domains_ip(domains):
     res=[]
     for domain in domains:
         domain = domain.replace('https://', '').replace('https//', '').replace('/', '')
-        A = dns.resolver.query(domain, 'A')
+        A = dns_query(domain, 'A')
         for i in A.response.answer:
             for j in i.items:
                 if j.rdtype == 1:

@@ -9,6 +9,8 @@
 '''
 import json
 from ipwhois import IPWhois
+from Core.compat import fix_dns
+fix_dns()
 
 def Ip_rdap(ip):
     obj = IPWhois(ip)
