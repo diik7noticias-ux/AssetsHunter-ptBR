@@ -8,8 +8,8 @@
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
 import argparse
-from Modules_Active import hawkeye, inforisk, whatcms
-from Modules_Passive import domain_ip, crt_domain, asn_cidr, censys_ip, ip_whois, domain_whois
+from Modules_Active import hawkeye, inforisk, whatcms, httpx_probe
+from Modules_Passive import domain_ip, crt_domain, asn_cidr, censys_ip, ip_whois, domain_whois, subfinder, wayback, urlscan
 from Tools import cidr_ip, kill_repeat, email_dig
 
 
@@ -26,6 +26,7 @@ def Console():
     ahf_modules_active.add_argument("-hawkeye", dest='hawkeye',help="Detecção WEB (CIDR/arquivo)")
     ahf_modules_active.add_argument("-inforisk", dest='inforisk', help="Detecção de vazamento de informações")
     ahf_modules_active.add_argument("-whatcms", dest='whatcms', help="Identificação de fingerprint (TideFinger)")
+ahf_modules_active.add_argument("-probe", dest='probe', help="Probe de hosts vivos (HTTPX)")
 
     #Módulos de varredura passiva
     ahf_modules_passive.add_argument("-asn", dest='asn',help="Consulta ASN ICDR")
@@ -34,6 +35,9 @@ def Console():
     ahf_modules_passive.add_argument("-dns", dest='dns',help="Resolução de registro DNS A")
     ahf_modules_passive.add_argument("-ipwhois", dest='ipwhois',help="Consulta IP Whois")
     ahf_modules_passive.add_argument("-whois", dest='whois',help="Consulta Whois de domínio")
+ahf_modules_passive.add_argument("-subfinder", dest='subfinder', help="Enumeração de subdomínios (HackerTarget+OTX+crt.sh)")
+ahf_modules_passive.add_argument("-wayback", dest='wayback', help="URLs antigas arquivadas (Wayback Machine)")
+ahf_modules_passive.add_argument("-urlscan", dest='urlscan', help="Histórico no URLScan.io")
 
 
     #Módulos de coleta de ativos
@@ -54,6 +58,8 @@ def Console():
         inforisk.run(args.inforisk)
     elif args.whatcms:
         whatcms.run(args.whatcms)
+    elif args.probe:
+        httpx_probe.run(args.probe)
 
     #Módulos de varredura passiva
     elif args.asn:
@@ -68,6 +74,12 @@ def Console():
         ip_whois.run(args.ipwhois)
     elif args.whois:
         domain_whois.run(args.whois)
+    elif args.subfinder:
+        subfinder.run(args.subfinder)
+    elif args.wayback:
+        wayback.run(args.wayback)
+    elif args.urlscan:
+        urlscan.run(args.urlscan)
 
     #Módulos de coleta de ativos
     elif args.cidr:

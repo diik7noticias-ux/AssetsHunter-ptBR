@@ -80,7 +80,7 @@ def mostrar_menu():
 def main():
     while True:
         mostrar_menu()
-        opcao = input('Escolha uma opção [0-10]: ').strip()
+        opcao = input('Escolha uma opção [0-14]: ').strip()
 
         if opcao == '0':
             print('\nAté logo! 🐰')
@@ -139,6 +139,28 @@ def main():
             cidr = input('CIDR (ex: 192.0.2.0/29): ').strip()
             if cidr:
                 rodar(['-hawkeye', cidr])
+
+        elif opcao == '11':
+            alvo = pedir_alvo('Domínio (ex: example.com): ')
+            if alvo:
+                rodar(['-subfinder', alvo])
+
+        elif opcao == '12':
+            alvo = pedir_alvo('Domínio (ex: example.com): ')
+            if alvo:
+                rodar(['-wayback', alvo])
+
+        elif opcao == '13':
+            alvo = pedir_alvo('Domínio (ex: example.com): ')
+            if alvo:
+                rodar(['-urlscan', alvo])
+
+        elif opcao == '14':
+            print('\n⚠️  Use apenas em alvos AUTORIZADOS.')
+            print('    Aceita: URL única, lista separada por vírgula, ou arquivo.')
+            alvo = input('Alvo: ').strip()
+            if alvo:
+                rodar(['-probe', alvo])
 
         else:
             print('\n❌ Opção inválida.')
