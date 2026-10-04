@@ -22,24 +22,24 @@ def Console():
 
 ########################################################################################################################
 
-    #主动式扫描模块
-    ahf_modules_active.add_argument("-hawkeye", dest='hawkeye',help="WEB侦测(cidr/文件)")
-    ahf_modules_active.add_argument("-inforisk", dest='inforisk', help="信息泄露检测")
-    ahf_modules_active.add_argument("-whatcms", dest='whatcms', help="指纹识别(TideFinger)")
+    #Módulos de varredura ativa
+    ahf_modules_active.add_argument("-hawkeye", dest='hawkeye',help="Detecção WEB (CIDR/arquivo)")
+    ahf_modules_active.add_argument("-inforisk", dest='inforisk', help="Detecção de vazamento de informações")
+    ahf_modules_active.add_argument("-whatcms", dest='whatcms', help="Identificação de fingerprint (TideFinger)")
 
-    #被动式扫描模块
-    ahf_modules_passive.add_argument("-asn", dest='asn',help="ASN查询ICDR")
-    ahf_modules_passive.add_argument("-censys", dest='censys',help="CENSYS API查询")
-    ahf_modules_passive.add_argument("-crt", dest='crt',help="证书透明度查询域名")
-    ahf_modules_passive.add_argument("-dns", dest='dns',help="DNS A记录解析")
-    ahf_modules_passive.add_argument("-ipwhois", dest='ipwhois',help="IP Whois查询")
-    ahf_modules_passive.add_argument("-whois", dest='whois',help="域名Whois查询")
+    #Módulos de varredura passiva
+    ahf_modules_passive.add_argument("-asn", dest='asn',help="Consulta ASN ICDR")
+    ahf_modules_passive.add_argument("-censys", dest='censys',help="Consulta à API CENSYS")
+    ahf_modules_passive.add_argument("-crt", dest='crt',help="Consulta de domínio via Certificate Transparency")
+    ahf_modules_passive.add_argument("-dns", dest='dns',help="Resolução de registro DNS A")
+    ahf_modules_passive.add_argument("-ipwhois", dest='ipwhois',help="Consulta IP Whois")
+    ahf_modules_passive.add_argument("-whois", dest='whois',help="Consulta Whois de domínio")
 
 
-    #资产收集工具模块
-    ahf_tools.add_argument("-cidr", dest='cidr',help="Cidr转换为IP范围")
-    ahf_tools.add_argument("-emaildig", dest='emaildig',help="Email挖掘工具(入口:文件)")
-    ahf_tools.add_argument("-removal", dest='removal',help="数据去重工具(入口:文件)")
+    #Módulos de coleta de ativos
+    ahf_tools.add_argument("-cidr", dest='cidr',help="Converte CIDR em intervalo de IP")
+    ahf_tools.add_argument("-emaildig", dest='emaildig',help="Ferramenta de mineração de e-mail (entrada: arquivo)")
+    ahf_tools.add_argument("-removal", dest='removal',help="Ferramenta de deduplicação de dados (entrada: arquivo)")
 
     args = parser.parse_args()
 
@@ -47,7 +47,7 @@ def Console():
 ########################################################################################################################
 
 
-    #主动式扫描模块
+    #Módulos de varredura ativa
     if args.hawkeye:
         hawkeye.run(args.hawkeye)
     elif args.inforisk:
@@ -55,7 +55,7 @@ def Console():
     elif args.whatcms:
         whatcms.run(args.whatcms)
 
-    #被动式扫描模块
+    #Módulos de varredura passiva
     elif args.asn:
         asn_cidr.run(args.asn)
     elif args.crt:
@@ -69,7 +69,7 @@ def Console():
     elif args.whois:
         domain_whois.run(args.whois)
 
-    #资产收集工具模块
+    #Módulos de coleta de ativos
     elif args.cidr:
         cidr_ip.run(args.cidr)
     elif args.emaildig:

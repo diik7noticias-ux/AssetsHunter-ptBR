@@ -7,12 +7,12 @@
 |  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
-#Hello~又是轮子时间，此模块提供了三个方法
-#Censys_ip用于框架调度，默认只查一页（100条）
-#Censys_ip_all是留给小伙伴们手动调度的轮子彩蛋
-#Censys_demo为最原始Demo，方便小伙伴们进行其他调度使用
-#请放心使用，异常精确制停将不会浪费您的API次数
-#模块更新时间：2020年4月24日00点14分 状态：已验收
+# Olá~ hora do código! Este módulo oferece três métodos
+# Censys_ip é usado pelo framework, consulta 1 página (100 itens) por padrão
+# Censys_ip_all é um extra para uso manual
+# Censys_demo é o exemplo bruto, para outros usos personalizados
+# Uso seguro: exceções são tratadas para não desperdiçar chamadas de API
+# Atualização do módulo: 24/04/2020 00h14  Status: validado
 
 import json
 from time import sleep
@@ -37,7 +37,7 @@ def Censys_ip(Domain,page):
             ips.append(i["ip"])
         return ips
     except:
-        print("Censys访问网络故障...")
+        print("Falha de rede ao acessar o Censys...")
 
 
 def Censys_ip_all(Domain):
@@ -52,7 +52,7 @@ def Censys_ip_all(Domain):
             i=i+1
             sleep(1)
         else:
-            print("这可能是一份不完整的结果...")
+            print("Este resultado pode estar incompleto...")
             break
     return ips
 

@@ -7,8 +7,8 @@
 |  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
-#这里是一个邮箱挖掘机！
-#输入格式为文件名，结果自动保存。
+# Aqui está um minerador de e-mails!
+# Entrada: nome do arquivo. Resultado é salvo automaticamente.
 
 import re
 from Core.decorators import Save_info
@@ -28,7 +28,7 @@ def Emain_dig(filename):
     res = rule.findall(data_str)
     res=list(set(res))
     res.sort()
-    print("捕获邮箱数量：{}".format(len(res)))
+    print("E-mails capturados: {}".format(len(res)))
     return res
 
 

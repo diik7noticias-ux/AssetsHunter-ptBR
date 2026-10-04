@@ -1,60 +1,113 @@
-# AssetsHunter
-资产狩猎框架-AssetsHunter，信息收集是一项艺术~
+# AssetsHunter — Caçador de Ativos (pt-BR)
 
-```
-   _____                        __           ___ ___               __
-  /  _  \   ______ ______ _____/  |_  ______/   |   \ __ __  _____/  |_  ___________
- /  /_\  \ /  ___//  ___// __ \   __\/  ___/    ~    \  |  \/    \   __\/ __ \_  __ \
-/    |    \\___ \ \___ \\  ___/|  |  \___ \\    Y    /  |  /   |  \  | \  ___/|  | \/
-\____|__  /____  >____  >\___  >__| /____  >\___|_  /|____/|___|  /__|  \___  >__|
-        \/     \/     \/     \/          \/       \/            \/          \/
+Framework de caça a ativos para reconhecimento em segurança ofensiva.
+A coleta de informações é uma arte. 🐰
 
-                                         AssetsHunterFramework | By Tide_RabbitMask | V 1.2
+> Tradução para português do projeto original
+> [rabbitmask/AssetsHunter](https://github.com/rabbitmask/AssetsHunter),
+> de autoria de **Tide_RabbitMask**. Todos os créditos ao autor original.
 
-usage: AssetsHunter.py [-h] [-hawkeye HAWKEYE] [-inforisk INFORISK] [-whatcms WHATCMS] [-asn ASN] [-censys CENSYS] [-crt CRT] [-dns DNS]
-                       [-ipwhois IPWHOIS] [-whois WHOIS] [-cidr CIDR] [-emaildig EMAILDIG] [-removal REMOVAL]
+---
 
-optional arguments:
-  -h, --help          show this help message and exit
+## 📖 Sobre
 
-AHF Modules_Passive:
-  -asn ASN            ASN查询ICDR
-  -censys CENSYS      CENSYS API查询
-  -crt CRT            证书透明度查询域名
-  -dns DNS            DNS A记录解析
-  -ipwhois IPWHOIS    IP Whois查询
-  -whois WHOIS        域名Whois查询
+O **AssetsHunter** é um framework de **coleta de informações (OSINT)** e
+**reconhecimento** para profissionais de segurança ofensiva. Reúne módulos
+passivos, ativos e ferramentas auxiliares em uma única interface de linha
+de comando.
 
-AHF Modules_Active:
-  -hawkeye HAWKEYE    WEB侦测(cidr/文件)
-  -inforisk INFORISK  信息泄露检测
-  -whatcms WHATCMS    指纹识别(TideFinger)
+---
 
-AHF Tools:
-  -cidr CIDR          Cidr转换为IP范围
-  -emaildig EMAILDIG  Email挖掘工具(入口:文件)
-  -removal REMOVAL    数据去重工具(入口:文件)
+## ⚠️ Aviso legal
 
-```
-```
-V 1.1更新日志
-   新增Cracks轻量级爆破模块
-      目前支持mysql、redis、ftp、ssh
-   新增字典模块
-      来自TideSec内部字典权重池
-   原核心模块降级为被动式信息收集模块
-   新增主动式信息收集模块
-      Hawkeye区段快速侦测模块
-      inforisk信息泄露检测模块
-      whatcms指纹识别模块(TideFinger提供指纹库支持)
-   修复某些不可描述的Bug
-V 1.2更新日志
-   移除爆破模块
-   Hawkeye区段快速侦测模块增加列表文件探测支持
-   更换随机UA头方案，移除fake_useragent库
-```
-  V 1.0说明
-  https://www.jianshu.com/p/aec51e4c368e
-  
-  V 1.1说明
-  https://www.jianshu.com/p/e87b5d2aa793
+Esta ferramenta deve ser usada **apenas** em:
+
+- Alvos próprios (seus domínios, seus servidores, seu laboratório)
+- Alvos para os quais você tem **autorização por escrito**
+- Programas de bug bounty dentro do escopo permitido
+
+O uso contra terceiros sem autorização é **crime** no Brasil
+(Lei 12.737/2012) e em diversas outras jurisdições.
+
+---
+
+## 🚀 Instalação
+
+### Linux / macOS
+
+    git clone https://github.com/diik7noticias-ux/AssetsHunter-ptBR.git
+    cd AssetsHunter-ptBR
+    pip install -r requirements.txt
+    pip install netaddr ipwhois python-whois lxml dnspython pymysql beautifulsoup4 censys requests
+
+### Termux (Android)
+
+    pkg update && pkg upgrade -y
+    pkg install -y python python-pip git clang make libcrypt libxml2 libxslt openssl libffi
+    git clone https://github.com/diik7noticias-ux/AssetsHunter-ptBR.git
+    cd AssetsHunter-ptBR
+    pip install -r requirements.txt
+    pip install netaddr ipwhois python-whois lxml dnspython pymysql beautifulsoup4 censys requests
+
+---
+
+## 🎯 Uso
+
+Ver o menu de ajuda:
+
+    python AssetsHunter.py -h
+
+### Módulos passivos (OSINT)
+
+    python AssetsHunter.py -asn AS12345
+    python AssetsHunter.py -censys 8.8.8.8
+    python AssetsHunter.py -crt exemplo.com
+    python AssetsHunter.py -dns exemplo.com
+    python AssetsHunter.py -ipwhois 8.8.8.8
+    python AssetsHunter.py -whois exemplo.com
+
+### Módulos ativos (só em alvos autorizados)
+
+    python AssetsHunter.py -hawkeye 192.168.1.0/24
+    python AssetsHunter.py -inforisk https://exemplo.com
+    python AssetsHunter.py -whatcms https://exemplo.com
+
+### Ferramentas
+
+    python AssetsHunter.py -cidr 192.168.1.0/24
+    python AssetsHunter.py -emaildig arquivo.txt
+    python AssetsHunter.py -removal arquivo.txt
+
+---
+
+## 📋 Parâmetros
+
+| Parâmetro | Descrição |
+|---|---|
+| `-asn` | Consulta ASN ICDR |
+| `-censys` | Consulta à API CENSYS |
+| `-crt` | Consulta de domínio via Certificate Transparency |
+| `-dns` | Resolução de registro DNS A |
+| `-ipwhois` | Consulta IP Whois |
+| `-whois` | Consulta Whois de domínio |
+| `-hawkeye` | Detecção WEB (CIDR/arquivo) |
+| `-inforisk` | Detecção de vazamento de informações |
+| `-whatcms` | Identificação de fingerprint (TideFinger) |
+| `-cidr` | Converte CIDR em intervalo de IP |
+| `-emaildig` | Ferramenta de mineração de e-mail |
+| `-removal` | Ferramenta de deduplicação de dados |
+
+---
+
+## 🙏 Créditos
+
+- **Autor original:** Tide_RabbitMask
+- **Repositório original:** https://github.com/rabbitmask/AssetsHunter
+- **Tradução pt-BR:** diik7noticias-ux
+
+---
+
+## 📄 Licença
+
+Este projeto segue a licença do repositório original. Consulte o arquivo
+`LICENSE` para mais detalhes.

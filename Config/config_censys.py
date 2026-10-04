@@ -8,9 +8,9 @@
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
 
-#如您所见，这是一个需要注册CEBSYS才能使用的功能
-#每个账号每个月可使用250次，请根据自身情况调度该功能
-#您需要更改的内容为API_ID和API_SECRET
+# Como você pode ver, esta função exige cadastro no CENSYS para uso
+# Cada conta tem 250 consultas/mês, use com moderação
+# Você precisa alterar os campos API_ID e API_SECRET
 
 API_URL = "https://censys.io/api/v1/search/ipv4"
 API_ID = "API_ID"

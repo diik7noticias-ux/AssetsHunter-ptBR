@@ -7,8 +7,8 @@
 |  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
-#唉，从跟服务器上没有获取到全面的cidr
-#如果有合适的技巧推荐，我们尽可能不借助api
+# Infelizmente não foi possível obter todos os CIDRs do servidor
+# Se houver uma técnica melhor, evitamos usar APIs
 
 import requests
 from Config.config_requests import headers
@@ -20,7 +20,7 @@ def Asn_cidr(asn):
         res = r.text.split('\n')[1:]
         return res
     except:
-        return ("Sorry,网络故障或查询过于频繁...")
+        return ("Desculpe, falha de rede ou consultas excessivas...")
 
 @Print_info
 def run(asn):

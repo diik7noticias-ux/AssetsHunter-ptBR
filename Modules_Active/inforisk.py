@@ -22,7 +22,7 @@ def svn_check(url):
         for content in contents:
             match = len(pattern.search(content).group(0))
             if req.status_code == 200 and match > 0:
-                print ("[+]存在svn源码泄露漏洞...\tpayload: "+url+'/.svn/entries')
+                print ("[+] Vulnerabilidade de vazamento de código-fonte SVN...\tpayload: "+url+'/.svn/entries')
     except:
         pass
 
@@ -30,7 +30,7 @@ def robots_check(url):
     try:
         req = requests.get(url+'/robots.txt', headers=headers, timeout=3, verify=False)
         if "Disallow" in req.text:
-            print ("[+]存在robots.txt爬虫文件...\tpayload: " + url+'/robots.txt')
+            print ("[+] Arquivo robots.txt encontrado...\tpayload: " + url+'/robots.txt')
     except:
         pass
 
@@ -38,7 +38,7 @@ def options_check(url):
     try:
         req = requests.options(url, headers=headers, timeout=3, verify=False)
         if r"OPTIONS" in req.headers['Allow']:
-            print ("[+]存在options方法开启...\tpayload: " + url + "\tAllow:" + req.headers['Allow'])
+            print ("[+] Método OPTIONS habilitado...\tpayload: " + url + "\tAllow:" + req.headers['Allow'])
     except:
         pass
 
@@ -46,7 +46,7 @@ def jsp_conf_check(url):
     try:
         req = requests.get(url+'/WEB-INF/web.xml', headers=headers, timeout=3, verify=False)
         if req.headers["Content-Type"] == "application/xml":
-            print("[+]存在web.xml配置文件...\tpayload: " + url + '/WEB-INF/web.xml')
+            print("[+] Arquivo de configuração web.xml encontrado...\tpayload: " + url + '/WEB-INF/web.xml')
     except:
         pass
 
@@ -54,7 +54,7 @@ def git_check(url):
     try:
         req = requests.get(url+'/.git/config', headers=headers, timeout=3, verify=False)
         if r"repositoryformatversion" in req.text and req.status_code == 200:
-            print("[+]存在git源码泄露漏洞...\tpayload: " + url + '/.git/config')
+            print("[+] Vulnerabilidade de vazamento de código-fonte Git...\tpayload: " + url + '/.git/config')
     except:
         pass
 
@@ -62,7 +62,7 @@ def jet_ide_check(url):
     try:
         req = requests.get(url+'/.idea/workspace.xml', headers=headers, timeout=3, verify=False)
         if r"<?xml version=" in req.text and r"project version" in req.text and req.status_code==200:
-            print("[+]存在JetBrains IDE workspace.xml文件泄露漏洞...\tpayload: " + url + '/.idea/workspace.xml')
+            print("[+] Vazamento do arquivo workspace.xml do JetBrains IDE...\tpayload: " + url + '/.idea/workspace.xml')
     except:
         pass
 
@@ -70,7 +70,7 @@ def crossdomain_check(url):
     try:
         req = requests.get(url+'/crossdomain.xml', headers=headers, timeout=3, verify=False)
         if r"<cross-domain-policy>" in req.text and r"allow-access-from" in req.text:
-            print("[+]存在crossdomain.xml文件发现漏洞...\tpayload: " + url + '/crossdomain.xml')
+            print("[+] Arquivo crossdomain.xml encontrado...\tpayload: " + url + '/crossdomain.xml')
     except:
         pass
 
@@ -78,7 +78,7 @@ def apache_check(url):
     try:
         req = requests.get(url+'/server-status', headers=headers, timeout=3, verify=False)
         if r"Server uptime" in req.text and r"Server Status" in req.text and req.status_code == 200:
-            print("[+]apache的状态信息文件泄露...\tpayload: " + url + '/server-status')
+            print("[+] Vazamento do arquivo de status do Apache...\tpayload: " + url + '/server-status')
     except:
         pass
 

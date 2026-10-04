@@ -7,8 +7,8 @@
 |  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
-#这个轮子是由crt.sh提供的API
-#用于证书透明度=》域名查询，辅助子域名收集
+# Esta função usa a API do crt.sh
+# Usada para consulta de domínio via Certificate Transparency, auxilia na coleta de subdomínios
 import requests
 from lxml import etree
 from Config.config_requests import headers

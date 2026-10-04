@@ -7,7 +7,7 @@
 |  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
-#时间关系，我还没想好怎么玩这个. . . . . .
+# Por falta de tempo, ainda não decidi como implementar isso...
 
 import whois
 from Core.decorators import Print_info

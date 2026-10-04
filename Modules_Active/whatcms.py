@@ -41,21 +41,21 @@ def Whatcms(url):
     fr = open('Dictionaries/TideFinger.json','r', encoding='UTF-8')
     data= json.load(fr, encoding='utf-8')
     fr.close()
-    print('指纹加载成功：{}条'.format(len(data)))
+    print('Fingerprints carregados: {} itens'.format(len(data)))
     print('Power By Tidefinger：http://finger.tidesec.com')
     for i in data:
         if i['options']=='md5':
             res=md5_check(url,i['path'],i['match_pattern'],i['cms_name'])
             if res:
-                print('目标指纹：'+res)
+                print('Fingerprint do alvo: '+res)
                 break
         elif i['options']=='keyword':
             res=keyword_check(url,i['path'],i['match_pattern'],i['cms_name'])
             if res:
-                print('目标指纹：'+res)
+                print('Fingerprint do alvo: '+res)
                 break
         else:
-            print('快康康我！我好像傻啦w(ﾟДﾟ)w')
+            print('Olha pra mim! Acho que dei erro! w(ﾟДﾟ)w')
 
 
 

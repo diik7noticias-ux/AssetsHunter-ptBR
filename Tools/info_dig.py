@@ -7,10 +7,10 @@
 |  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
-#这是一个样例轮子，并未集成进入框架
-#因为敏感信息的收集更倾向于实景定制
-#这里是曾经笔者用过的一个样例，留给大家参考
-#其中的细节对于混乱的txt处理很有借鉴价值
+# Este é um exemplo, não integrado ao framework
+# A coleta de informações sensíveis tende a ser personalizada por cenário
+# Exemplo usado pelo autor, deixado como referência
+# Os detalhes são úteis para tratar arquivos txt bagunçados
 
 import re
 import time
@@ -26,11 +26,11 @@ def Info_dig(filename):
     for i in data:
         data_str=data_str+i.replace('\n','')
 
-    name = re.compile(r'(姓名：.*?)帐号').findall(data_str)
-    job = re.compile(r'(职务/岗位：.*?)所在部门').findall(data_str)
-    department =re.compile(r'(所在部门：.*?)办公总机').findall(data_str)
-    email=re.compile(r'(邮箱：.*?)分机').findall(data_str)
-    phone=re.compile(r'(手机：.*?)传真电话').findall(data_str)
+    name = re.compile(r'(Nome:.*?)Conta').findall(data_str)
+    job = re.compile(r'(Cargo/Posição:.*?)Departamento').findall(data_str)
+    department =re.compile(r'(Departamento:.*?)Telefone central').findall(data_str)
+    email=re.compile(r'(E-mail:.*?)Ramal').findall(data_str)
+    phone=re.compile(r'(Celular:.*?)Fax').findall(data_str)
 
     timetoken = str(int(time.time()))
     filename = 'info_dig_result_{}.rabbit'.format(timetoken)
@@ -39,7 +39,7 @@ def Info_dig(filename):
         fw=open(filename,'a')
         fw.write('No '+str(i+1)+'\n'+name[i]+'\n'+job[i]+'\n'+department[i]+'\n'+email[i]+'\n'+phone[i]+'\n\n\n')
         fw.close()
-        print('结果已保存至：'+filename)
+        print('Resultado salvo em: '+filename)
 
 
 if __name__ == '__main__':

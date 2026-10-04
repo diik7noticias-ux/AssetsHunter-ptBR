@@ -7,10 +7,10 @@
 |  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
 |_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
 '''
-# 借助第三方库写的A记录解析轮子
-# 提供了一个对外接口，智能匹配输入类型
-# 自动识别请求域名列表还是单域名类型
-# 其实为了防手残还增加了`http://`和`https://`即`/`的过滤
+# Função de resolução de registro A usando bibliotecas de terceiros
+# Fornece uma interface externa que detecta automaticamente o tipo de entrada
+# Reconhece automaticamente se é lista de domínios ou domínio único
+# Também filtra 'http://', 'https://' e '/' para evitar erros de digitação
 
 import dns.resolver
 from Core.decorators import Print_info

@@ -9,7 +9,7 @@
 '''
 import time
 
-#列表打印装饰器
+# Decorador de impressão de lista
 def Print_info(fun):
     def work(*args,**kwargs):
         res=fun(*args, **kwargs)
@@ -24,9 +24,9 @@ def Print_info(fun):
         return fun(*args, **kwargs)
     return work
 
-# 结果导出装饰器
-# 保存文件类型为.rabbit，因为我不希望这个结果被记事本草率地打开，
-# 因为可能会乱，/哭唧唧，推荐notepad++、SublimeText、VScode等。
+# Decorador de exportação de resultados
+# Salva arquivo com extensão .rabbit, para evitar abertura descuidada no Bloco de Notas,
+# pois pode ficar bagunçado. Recomendado: Notepad++, SublimeText, VSCode, etc.
 
 def Save_info(fun):
     def work(*args,**kwargs):
@@ -41,6 +41,6 @@ def Save_info(fun):
                     fw.close()
                 except:
                     pass
-            print('结果已保存至：'+filename)
+            print('Resultado salvo em: '+filename)
         # return fun(*args, **kwargs)
     return work

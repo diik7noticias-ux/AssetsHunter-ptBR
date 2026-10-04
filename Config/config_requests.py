@@ -10,10 +10,10 @@
 
 # from fake_useragent import UserAgent
 #
-# # 实例化 UserAgent 类
+# # Instancia a classe UserAgent
 # ua = UserAgent(verify_ssl=False)
 #
-# # 通用headers配置
+# # Configuração genérica de headers
 # headers={"User-Agent":ua.random}
 #
 # if __name__ == '__main__':

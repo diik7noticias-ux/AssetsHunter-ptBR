@@ -62,7 +62,7 @@ def Hawkeye_cidr(cidr):
     p = Pool(30)
     q = Manager().Queue()
     urls=Get_urls(cidr)
-    print('侦测开始~加载任务量：{}条'.format(len(urls)))
+    print('Iniciando detecção ~ tarefas carregadas: {} itens'.format(len(urls)))
     if urls:
         for i in urls:
             p.apply_async(Get_tile, args=(i,res,q))
@@ -70,7 +70,7 @@ def Hawkeye_cidr(cidr):
         p.join()
         return res
     else:
-        print("CIDR格式输入有误，锤你昂w(ﾟДﾟ)w")
+        print("Formato de CIDR incorreto, verifique! w(ﾟДﾟ)w")
 
 def Get_tile_file(url,res,q):
     try:
@@ -84,8 +84,8 @@ def Get_tile_file(url,res,q):
             print(url + '  ' + str(r.status_code) + '  ' + r.content.decode('utf-8').replace('\n','')[0:30])
             res.append(url + '  ' + str(r.status_code) + '  ' + r.content.decode('utf-8').replace('\n','')[0:30])
     except:
-        # print(url + '  ' + "Error" + '  ' + " 网络故障 or 目标服务故障 or 兔子心情不好")
-        # res.append(url + '  ' + "Error" + '  ' + " 网络故障 or 目标服务故障 or 兔子心情不好")
+        # print(url + '  ' + "Error" + '  ' + " Falha de rede ou do serviço alvo ou o coelho está de mau humor")
+        # res.append(url + '  ' + "Error" + '  ' + " Falha de rede ou do serviço alvo ou o coelho está de mau humor")
         pass
     q.put(url)
 
@@ -99,7 +99,7 @@ def Hawkeye_file(filename):
         urls=f.readlines()
         f.close()
 
-        print('侦测开始~加载任务量：{}条'.format(len(urls)))
+        print('Iniciando detecção ~ tarefas carregadas: {} itens'.format(len(urls)))
         if urls:
             for i in urls:
                 p.apply_async(Get_tile_file, args=(urlcheck(i.replace('\n','')),res,q))
@@ -107,9 +107,9 @@ def Hawkeye_file(filename):
             p.join()
             return res
         else:
-            print("文件内容错误，锤你昂w(ﾟДﾟ)w")
+            print("Erro no conteúdo do arquivo, verifique! w(ﾟДﾟ)w")
     except:
-        print("给我个文件吖喂 w(ﾟДﾟ)w")
+        print("Forneça um arquivo! w(ﾟДﾟ)w")
 
 
 def run(*args):

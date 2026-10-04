@@ -17,10 +17,10 @@ def Kill_repeat(filename):
     data = fr.readlines()
     fr.close()
 
-    print("去重前：{}条数据".format(len(data)))
+    print("Antes da deduplicação: {} itens".format(len(data)))
     data = list(set(data))
     data.sort()
-    print("去重后：{}条数据".format(len(data)))
+    print("Depois da deduplicação: {} itens".format(len(data)))
     return data
 
 def run(filename):
