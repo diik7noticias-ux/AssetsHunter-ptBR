@@ -26,8 +26,9 @@ Esta ferramenta deve ser usada **apenas** em:
 - Alvos para os quais você tem **autorização por escrito**
 - Programas de bug bounty dentro do escopo permitido
 
-O uso contra terceiros sem autorização é **crime** no Brasil
-(Lei 12.737/2012) e em diversas outras jurisdições.
+O acesso não autorizado a sistemas informáticos é **crime** previsto
+na Lei n.º 38/20 (Lei das Comunicações Eletrónicas e dos Serviços da
+Sociedade da Informação) e no Código Penal Angolano.
 
 ---
 
