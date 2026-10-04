@@ -1,119 +1,93 @@
 #!/usr/bin/env python3
 # _*_ coding:utf-8 _*_
-'''
- ____       _     _     _ _   __  __           _
-|  _ \ __ _| |__ | |__ (_) |_|  \/  | __ _ ___| | __
-| |_) / _` | '_ \| '_ \| | __| |\/| |/ _` / __| |/ /
-|  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
-|_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
-'''
+# Detecção WEB em CIDR ou arquivo.
+# Versão otimizada com httpx (async).
+
+import asyncio
 import re
-import requests
-from multiprocessing import Pool, Manager
+
+import httpx
 
 from Config.config_hawkeye import Port_HTTP, Port_HTTPS
 from Config.config_requests import headers
 from Core.decorators import Save_info
 from Tools.cidr_ip import Cidr_ips
 
-requests.packages.urllib3.disable_warnings()
-
 
 def urlcheck(url):
     if 'http' in url:
         return url
-    else:
-        return ('http://'+str(url))
+    return 'http://' + str(url)
+
 
 def Get_urls(cidr):
-    if re.match(r"^(?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([1-9]|[1-2]\d|3[0-2])$",cidr):
-        try:
-            urls=[]
-            ips = Cidr_ips(cidr)
-            for ip in ips:
-                for i in Port_HTTP:
-                    urls.append('http://'+str(ip)+':'+str(i))
-                for j in Port_HTTPS:
-                    urls.append('https://'+str(ip)+':'+str(j))
-            return urls
-        except:
-            pass
-    else:
-        pass
-
-def Get_tile(url,res,q):
+    urls = []
     try:
-        r=requests.get(url,headers=headers,timeout=10,verify=False)
-        rule = re.compile(r'<title.*?>(.*?)</title>')
-        title = rule.findall(r.content.decode('utf-8'))
-        if title:
-            print(url+'  '+str(r.status_code)+'  '+title[0].decode('utf-8'))
-            res.append(url+'  '+str(r.status_code)+'  '+title[0].decode('utf-8'))
-        else:
-            print(url + '  ' + str(r.status_code) + '  ' + r.content.decode('utf-8').replace('\n','')[0:30])
-            res.append(url + '  ' + str(r.status_code) + '  ' + r.content.decode('utf-8').replace('\n','')[0:30])
-    except:
+        ips = Cidr_ips(cidr)
+        for ip in ips:
+            for p in Port_HTTP:
+                urls.append(f'http://{ip}:{p}')
+            for p in Port_HTTPS:
+                urls.append(f'https://{ip}:{p}')
+    except Exception:
         pass
-    q.put(url)
+    return urls
+
+
+TITLE_RE = re.compile(r'<title.*?>(.*?)</title>', re.IGNORECASE | re.DOTALL)
+
+
+async def checar(client, url):
+    try:
+        r = await client.get(url, headers=headers, timeout=10)
+        m = TITLE_RE.findall(r.text)
+        if m:
+            titulo = m[0].strip()[:80]
+            linha = f'{url} {r.status_code} {titulo}'
+        else:
+            corpo = r.text.replace('\n', '')[:30]
+            linha = f'{url} {r.status_code} {corpo}'
+        print(linha)
+        return linha
+    except Exception:
+        return None
+
+
+async def varrer(urls):
+    resultados = []
+    async with httpx.AsyncClient(verify=False, follow_redirects=True) as client:
+        tarefas = [checar(client, u) for u in urls]
+        for coro in asyncio.as_completed(tarefas):
+            res = await coro
+            if res:
+                resultados.append(res)
+    return resultados
+
 
 @Save_info
 def Hawkeye_cidr(cidr):
-    res = Manager().list([])
-    p = Pool(30)
-    q = Manager().Queue()
-    urls=Get_urls(cidr)
-    print('Iniciando detecção ~ tarefas carregadas: {} itens'.format(len(urls)))
-    if urls:
-        for i in urls:
-            p.apply_async(Get_tile, args=(i,res,q))
-        p.close()
-        p.join()
-        return res
-    else:
+    urls = Get_urls(cidr)
+    if not urls:
         print("Formato de CIDR incorreto, verifique! w(ﾟДﾟ)w")
+        return []
+    print(f'Iniciando detecção ~ tarefas carregadas: {len(urls)} itens')
+    return asyncio.run(varrer(urls))
 
-def Get_tile_file(url,res,q):
-    try:
-        r=requests.get(url,headers=headers,timeout=10,verify=False)
-        rule = re.compile(r'<title.*?>(.*?)</title>')
-        title = rule.findall(r.content.decode('utf-8'))
-        if title:
-            print(url+'  '+str(r.status_code)+'  '+title[0].decode('utf-8'))
-            res.append(url+'  '+str(r.status_code)+'  '+title[0].decode('utf-8'))
-        else:
-            print(url + '  ' + str(r.status_code) + '  ' + r.content.decode('utf-8').replace('\n','')[0:30])
-            res.append(url + '  ' + str(r.status_code) + '  ' + r.content.decode('utf-8').replace('\n','')[0:30])
-    except:
-        # print(url + '  ' + "Error" + '  ' + " Falha de rede ou do serviço alvo ou o coelho está de mau humor")
-        # res.append(url + '  ' + "Error" + '  ' + " Falha de rede ou do serviço alvo ou o coelho está de mau humor")
-        pass
-    q.put(url)
 
 @Save_info
 def Hawkeye_file(filename):
-    res = Manager().list([])
-    p = Pool(30)
-    q = Manager().Queue()
     try:
-        f=open(filename,'r')
-        urls=f.readlines()
-        f.close()
-
-        print('Iniciando detecção ~ tarefas carregadas: {} itens'.format(len(urls)))
-        if urls:
-            for i in urls:
-                p.apply_async(Get_tile_file, args=(urlcheck(i.replace('\n','')),res,q))
-            p.close()
-            p.join()
-            return res
-        else:
-            print("Erro no conteúdo do arquivo, verifique! w(ﾟДﾟ)w")
-    except:
-        print("Forneça um arquivo! w(ﾟДﾟ)w")
+        with open(filename, 'r') as f:
+            urls = [urlcheck(l.strip()) for l in f if l.strip()]
+    except Exception:
+        print('Forneça um arquivo! w(ﾟДﾟ)w')
+        return []
+    print(f'Iniciando detecção ~ tarefas carregadas: {len(urls)} itens')
+    return asyncio.run(varrer(urls))
 
 
 def run(*args):
-    if len(args)==1:
+    if len(args) == 1:
         if '/' in args[0]:
             Hawkeye_cidr(args[0])
         else:
@@ -121,4 +95,4 @@ def run(*args):
 
 
 if __name__ == '__main__':
-    print(Get_tile('https://github.com/rabbitmask/AssetsHunter'))
+    Hawkeye_cidr('192.0.2.0/29')

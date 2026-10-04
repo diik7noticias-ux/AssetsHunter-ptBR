@@ -1,75 +1,56 @@
 #!/usr/bin/env python3
 # _*_ coding:utf-8 _*_
-'''
- ____       _     _     _ _   __  __           _
-|  _ \ __ _| |__ | |__ (_) |_|  \/  | __ _ ___| | __
-| |_) / _` | '_ \| '_ \| | __| |\/| |/ _` / __| |/ /
-|  _ < (_| | |_) | |_) | | |_| |  | | (_| \__ \   <
-|_| \_\__,_|_.__/|_.__/|_|\__|_|  |_|\__,_|___/_|\_\
-'''
-# Olá~ hora do código! Este módulo oferece três métodos
-# Censys_ip é usado pelo framework, consulta 1 página (100 itens) por padrão
-# Censys_ip_all é um extra para uso manual
-# Censys_demo é o exemplo bruto, para outros usos personalizados
-# Uso seguro: exceções são tratadas para não desperdiçar chamadas de API
-# Atualização do módulo: 24/04/2020 00h14  Status: validado
+# Censys API v2 (a v1 foi descontinuada em 2022).
+# Crie conta grátis em https://search.censys.io
+# Gere API ID e Secret em https://search.censys.io/account/api
 
-import json
-from time import sleep
 import requests
-from Config.config_censys import API_ID, API_SECRET, API_URL
-from Config.config_requests import headers
-from Core.decorators import  Save_info
+from Config.config_censys import API_ID, API_SECRET
+from Core.decorators import Save_info
+
+BASE = "https://search.censys.io/api/v2"
 
 
 @Save_info
-def Censys_ip(Domain,page):
-    data = {
-        "query": Domain,
-        "page": page,
-        "fields": ["ip"],
-    }
+def Censys_ip(ip):
+    if API_ID == "API_ID" or API_SECRET == "API_SECRET":
+        print("⚠️  Configure API_ID e API_SECRET em Config/config_censys.py")
+        return []
+
+    url = f"{BASE}/hosts/{ip}"
     try:
-        res = requests.post(API_URL,data=json.dumps(data), auth=(API_ID, API_SECRET),headers=headers)
-        results=res.json()["results"]
-        ips=[]
-        for i in results:
-            ips.append(i["ip"])
-        return ips
-    except:
-        print("Falha de rede ao acessar o Censys...")
+        r = requests.get(url, auth=(API_ID, API_SECRET), timeout=15)
+        if r.status_code == 404:
+            print(f"IP não encontrado no Censys: {ip}")
+            return []
+        if r.status_code == 401:
+            print("Credenciais inválidas (API_ID/API_SECRET).")
+            return []
+        if r.status_code != 200:
+            print(f"Erro HTTP {r.status_code}: {r.text[:200]}")
+            return []
+
+        data = r.json().get('result', {})
+        resultado = []
+        resultado.append(f"IP: {ip}")
+        resultado.append(f"País: {data.get('location', {}).get('country', '-')}")
+        resultado.append(f"ASN: {data.get('autonomous_system', {}).get('asn', '-')}")
+        resultado.append(f"Descrição: {data.get('autonomous_system', {}).get('description', '-')}")
+        for svc in data.get('services', []):
+            porta = svc.get('port')
+            nome = svc.get('service_name', '-')
+            resultado.append(f"  Serviço: porta {porta} ({nome})")
+        for linha in resultado:
+            print(linha)
+        return resultado
+    except Exception as e:
+        print(f"Erro ao consultar Censys: {e}")
+        return []
 
 
-def Censys_ip_all(Domain):
-    ips=[]
-    i=1
-    while 1:
-        res=Censys_ip(Domain,i)
-        if res:
-            ips=ips+res
-            if len(res)<100:
-                break
-            i=i+1
-            sleep(1)
-        else:
-            print("Este resultado pode estar incompleto...")
-            break
-    return ips
-
-
-def Censys_demo(Domain):
-    data = {
-        "query": Domain,
-        "page": 1,
-        "fields": [],
-    }
-    res = requests.post(API_URL,data=json.dumps(data), auth=(API_ID, API_SECRET),headers=headers)
-    return res.json()
-
-def run(Domain):
-    return Censys_ip(Domain, 1)
+def run(ip):
+    Censys_ip(ip)
 
 
 if __name__ == '__main__':
-    print(Censys_ip("taobao.com",1))
-    # print(Censys_ip_all("taobao.com"))
+    run('8.8.8.8')
